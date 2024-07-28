@@ -1,0 +1,25 @@
+﻿.btnIngresar {
+    width: 200px;
+    height: 40px;
+    background-color: darkblue;
+    color: white;
+    border: none;
+    transition: background-color 3s;
+    margin: 0 auto;
+    border-radius: 5px;
+    display: block;
+}
+
+.btnIngresar:hover {
+    background-color: black;
+ }
+
+
+.fas {
+    font-size: 1.5em; /* Ajusta esto según el tamaño deseado del ícono */
+}
+
+.form-control {
+    height: 48px; /* Ajusta la altura del input según necesites */
+}
+

@@ -1,0 +1,64 @@
+﻿@model IEnumerable<MuniChorrillos2.Models.Infraccion>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="display-4">Infracciones</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Codigo
+            </th>
+            <th>
+                Descripcion
+            </th>
+            <th>
+                Resolucion M
+            </th>
+            <th>
+                Rango
+            </th>
+            <th>
+                Costo (UIT)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdInfraccion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NomInfraccion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Descripcion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Resolucion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rango)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Monto)
+                </td>
+            <td>
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.IdInfraccion">Edit</a> |
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.IdInfraccion">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

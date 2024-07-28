@@ -1,0 +1,74 @@
+﻿@model MuniChorrillos2.Models.UsuarioAcceso
+@{
+    Layout = null;
+    ViewData["Title"] = "Login";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Municiapalidad De Chorrillos</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="~/css/Login.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="containerLogin mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8 col-sm-10">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <img src="~/Images/logoMuni.png" alt="Login" class="img-fluid mb-3" style="max-height: 100px;">
+                        <h1>LOGIN</h1>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Login" asp-controller="Acceso" method="post">
+                            <!-- Usuario input -->
+                            <div class="form-group mb-3">
+                               
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    </div>
+                                    <input asp-for="UsuarioNom" class="form-control" placeholder="Usuario" />
+                                </div>
+                                <span asp-validation-for="UsuarioNom" class="text-danger"></span>
+                            </div>
+
+                            <!-- Contraseña input -->
+                            <div class="form-group mb-3">
+                                
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    </div>
+                                    <input asp-for="Contraseña" type="password" class="form-control" placeholder="Contraseña"/>
+                                </div>
+                                <span asp-validation-for="Contraseña" class="text-danger"></span>
+                            </div>
+
+                           
+
+                            <!-- Submit button -->
+                            <div class="btnIngresar d-grid mb-3">
+                                <button type="submit" class="btn btn-primary">Ingresar</button>
+                            </div>
+
+                            <!-- Forgot password link -->
+                            <div class="lnkClave mb-3 text-end">
+                                <a href="~/Acceso/RecuperarContraseña">¿Olvidaste tu contraseña?</a>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

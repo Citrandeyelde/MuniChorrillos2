@@ -1,0 +1,22 @@
+.nav__link a {
+    color: darkblue;
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.nav__link a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    background-color: darkblue;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}    
+
+.nav__link:hover a::after {
+    opacity: 1;
+}

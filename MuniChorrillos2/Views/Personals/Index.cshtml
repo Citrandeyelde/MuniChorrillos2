@@ -1,0 +1,46 @@
+﻿@model IEnumerable<MuniChorrillos2.Models.Personal>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="display-4">Personal Adminstrativo</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a>Usuario</a>
+            </th>
+            <th>
+                <a>Area</a>
+            </th>
+            <th>
+                <a>Nombre Empleado</a>  
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UsuarioAcceso)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdAreaNavigation.NomArea)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdEmpleadoNavigation.NomEmpleado)
+            </td>
+            <td>
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.IdPersonal">Edit</a> |
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.IdPersonal">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,59 @@
+﻿@model IEnumerable<MuniChorrillos2.Models.Horario>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="display-4">Horarios del Personal</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Crear NuevoHorario</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Empleado
+            </th>
+            <th>
+                Area
+            </th>
+            <th>
+                Dia
+            </th>            
+            <th>
+                Hora Ingreso
+            </th>            
+            <th>
+                Hora Salida
+            </th>            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdEmpleadoNavigation.NomEmpleado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdAreaNavigation.NomArea)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dia)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Hingreso)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Hsalida)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdHorario">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdHorario">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdHorario">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
