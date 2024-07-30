@@ -25,7 +25,7 @@
                 <div class="navbar__nav"> 
                      <ul class="nav__list">
                         <li class="nav__link">
-                            <a asp-controller="Home" asp-action="Privacy">Inicio</a>
+                            <a asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
                         <li class="nav__link">
                             <a asp-controller="Areas" asp-action="Index">Areas</a>
@@ -54,6 +54,16 @@
                         <li class="nav__link">
                             <a asp-controller="Home" asp-action="Logout">Salir</a>
                         </li>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dropdown button
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            </ul>
+                        </div>
 
                     </ul>    
 
@@ -81,7 +91,7 @@
     </div>
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - MuniChorrillos2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - MuniChorrillos2 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Equipo</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

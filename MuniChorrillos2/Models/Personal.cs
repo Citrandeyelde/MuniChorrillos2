@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace MuniChorrillos2.Models;
 
@@ -26,6 +24,4 @@ public partial class Personal
     public virtual ICollection<Multum> Multa { get; set; } = new List<Multum>();
 
     public virtual ICollection<Vmunicipal> Vmunicipals { get; set; } = new List<Vmunicipal>();
-
-    
 }

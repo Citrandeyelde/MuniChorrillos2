@@ -11,7 +11,19 @@ public partial class Horario
 
     public int IdArea { get; set; }
 
-    public string? Dia { get; set; }
+    public int? Lunes { get; set; }
+
+    public int? Martes { get; set; }
+
+    public int? Miercoles { get; set; }
+
+    public int? Jueves { get; set; }
+
+    public int? Viernes { get; set; }
+
+    public int? Sabado { get; set; }
+
+    public int? Domingo { get; set; }
 
     public TimeSpan? Hingreso { get; set; }
 

@@ -47,7 +47,7 @@ namespace MuniChorrillos2.Controllers
 
         // GET: Horarios/Create
         public IActionResult Create()
-        {   
+        {
             ViewData["IdArea"] = new SelectList(_context.Areas, "IdArea", "NomArea");
             ViewData["IdEmpleado"] = new SelectList(_context.Empleados, "IdEmpleado", "NomEmpleado");
             return View();
@@ -58,7 +58,7 @@ namespace MuniChorrillos2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdHorario,IdEmpleado,IdArea,Dia,Hingreso,Hsalida")] Horario horario)
+        public async Task<IActionResult> Create([Bind("IdHorario,IdEmpleado,IdArea,Lunes,Martes,Miercoles,Jueves,Viernes,Sabado,Domingo,Hingreso,Hsalida")] Horario horario)
         {
             if (true)
             {
@@ -66,8 +66,8 @@ namespace MuniChorrillos2.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdArea"] = new SelectList(_context.Areas, "IdArea", "NomArea", horario.IdArea);
-            ViewData["IdEmpleado"] = new SelectList(_context.Empleados, "IdEmpleado", "NomEmpleado", horario.IdEmpleado);
+            ViewData["IdArea"] = new SelectList(_context.Areas, "IdArea", "IdArea", horario.IdArea);
+            ViewData["IdEmpleado"] = new SelectList(_context.Empleados, "IdEmpleado", "IdEmpleado", horario.IdEmpleado);
             return View(horario);
         }
 
@@ -94,7 +94,7 @@ namespace MuniChorrillos2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdHorario,IdEmpleado,IdArea,Dia,Hingreso,Hsalida")] Horario horario)
+        public async Task<IActionResult> Edit(int id, [Bind("IdHorario,IdEmpleado,IdArea,Lunes,Martes,Miercoles,Jueves,Viernes,Sabado,Domingo,Hingreso,Hsalida")] Horario horario)
         {
             if (id != horario.IdHorario)
             {

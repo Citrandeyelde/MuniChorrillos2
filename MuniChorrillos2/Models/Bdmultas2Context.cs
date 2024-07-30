@@ -47,7 +47,7 @@ public partial class Bdmultas2Context : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=BDMULTAS2;Integrated Security=True;TrustServerCertificate=true;");
+        => optionsBuilder.UseSqlServer("Data Source=EdRojas1604;Initial Catalog=BDMULTAS2;Integrated Security=True;TrustServerCertificate=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -186,11 +186,9 @@ public partial class Bdmultas2Context : DbContext
 
         modelBuilder.Entity<Horario>(entity =>
         {
-            entity.HasKey(e => e.IdHorario).HasName("PK__Horarios__1539229B90C80B56");
+            entity.HasKey(e => e.IdHorario).HasName("PK__Horarios__1539229B9EDCCF94");
 
-            entity.Property(e => e.Dia)
-                .HasMaxLength(3)
-                .IsUnicode(false);
+            entity.Property(e => e.Domingo).HasDefaultValueSql("((0))");
             entity.Property(e => e.Hingreso)
                 .HasDefaultValueSql("('00:00:00.00')")
                 .HasColumnName("HIngreso");
@@ -199,16 +197,22 @@ public partial class Bdmultas2Context : DbContext
                 .HasColumnName("HSalida");
             entity.Property(e => e.IdArea).HasColumnName("Id_Area");
             entity.Property(e => e.IdEmpleado).HasColumnName("Id_Empleado");
+            entity.Property(e => e.Jueves).HasDefaultValueSql("((0))");
+            entity.Property(e => e.Lunes).HasDefaultValueSql("((0))");
+            entity.Property(e => e.Martes).HasDefaultValueSql("((0))");
+            entity.Property(e => e.Miercoles).HasDefaultValueSql("((0))");
+            entity.Property(e => e.Sabado).HasDefaultValueSql("((0))");
+            entity.Property(e => e.Viernes).HasDefaultValueSql("((0))");
 
             entity.HasOne(d => d.IdAreaNavigation).WithMany(p => p.Horarios)
                 .HasForeignKey(d => d.IdArea)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Horarios__Id_Are__60A75C0F");
+                .HasConstraintName("FK__Horarios__Id_Are__0C85DE4D");
 
             entity.HasOne(d => d.IdEmpleadoNavigation).WithMany(p => p.Horarios)
                 .HasForeignKey(d => d.IdEmpleado)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Horarios__Id_Emp__5FB337D6");
+                .HasConstraintName("FK__Horarios__Id_Emp__0B91BA14");
         });
 
         modelBuilder.Entity<Infraccion>(entity =>
@@ -231,8 +235,7 @@ public partial class Bdmultas2Context : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.Monto)
                 .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("Monto"); ;
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Multum>(entity =>
