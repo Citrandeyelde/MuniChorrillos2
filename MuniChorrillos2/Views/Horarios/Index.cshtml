@@ -1,0 +1,123 @@
+﻿@model IEnumerable<MuniChorrillos2.Models.Horario>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="display-4">Horarios</h1>
+
+<p>
+    <a class="btn btn-outline-primary" asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Lunes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Martes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Miercoles)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jueves)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Viernes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sabado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Domingo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Hingreso)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Hsalida)
+            <th>
+                Empleado
+            </th>
+            <th>
+                Area
+            </th>
+            <th></th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+            <tr>
+            <td>
+                @{
+                    String res;
+                    if (item.Lunes == 1) res = "X";
+                    else res = "O";
+                }
+                @res
+            </td>
+            <td>
+                @{
+                    if (item.Martes == 1) res = "X";
+                    else res = "O";
+                }
+                @res
+            </td>
+            <td>
+                @{
+                    if (item.Martes == 1) res = "X";
+                    else res = "O";
+                }
+                @res
+            </td>
+            <td>
+                @{
+                    if (item.Jueves == 1) res = "X";
+                    else res = "O";
+                }
+                @res
+            </td>
+            <td>
+                @{
+                    if (item.Miercoles == 1) res = "X";
+                    else res = "O";
+                }
+                @res
+            </td>
+            <td>
+                @{
+                    if (item.Jueves == 1) res = "X";
+                    else res = "O";
+                }
+                @res
+            </td>
+            <td>
+                @{
+                    if (item.Viernes == 1) res = "X";
+                    else res = "O";
+                }
+                @res
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Hingreso)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Hsalida)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdAreaNavigation.NomArea)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdEmpleadoNavigation.NomEmpleado)
+            </td>
+            <td>
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.IdHorario">Edit</a> |
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.IdHorario">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

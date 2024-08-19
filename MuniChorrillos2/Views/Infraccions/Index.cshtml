@@ -1,0 +1,159 @@
+﻿@model IEnumerable<MuniChorrillos2.Models.Infraccion>
+
+@{
+    ViewData["Title"] = "Mantenimiento de Ordenanzas Municipales";
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <div class="container">
+        <div class="card mt-4">
+            <div class="card-header">
+                Mantenimiento de Ordenanzas Municipales
+            </div>
+            <div class="card-body">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalInfraccion">Agregar</button>
+                <hr />
+                <div class="table-responsive">
+                    <table class="table table-striped mx-auto" id="tblInfraccion">
+                        <thead>
+                            <tr>
+
+                                <th scope="col">#</th>
+                                <th scope="col">Ordenanza</th>
+                                <th scope="col">Descripcion</th>
+                                <th scope="col">Resolucion</th>
+                                <th scope="col">Rango</th>
+                                <th scope="col">Monto</th>
+                                <th scope="col">Acciones</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td>@Html.DisplayFor(modelItem => item.NomInfraccion)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Descripcion)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Resolucion)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Rango)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Monto)</td>
+                                    <td>
+                                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalInfraccion"
+                                                data-id="@item.IdInfraccion"
+                                                data-nominfraccion="@item.NomInfraccion"
+                                                data-descripcion="@item.Descripcion"
+                                                data-resolucion="@item.Resolucion"
+                                                data-rango="@item.Rango"
+                                                data-monto="@item.Monto">
+                                                Actualizar
+                                        </button >
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete"
+                                                data-id="@item.IdInfraccion">
+                                                Eliminar
+                                        </button>
+                                    </td>
+                                    
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- Modal para agregar/actualizar Vehículo Municipal -->
+    <div class="modal fade" id="modalInfraccion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Ordenanza Municipal</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="vInfraccionForm" action="/Infraccions/CreateOrUpdate" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="hddIdInfraccion" name="IdInfraccion" value="0">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtNomInfraccion" name="NomInfraccion" placeholder="Ordenanza">
+                            <label for="txtNomInfraccion">Ordenanza</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtDescripcion" name="Descripcion" placeholder="Descripcion">
+                            <label for="txtDescripcion">Descripcion</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtResolucion" name="Resolucion" placeholder="Resolucion">
+                            <label for="txtResolucion">Resolucion</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtRango" name="Rango" placeholder="Rango">
+                            <label for="txtRango">Rango</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtMonto" name="Monto" placeholder="Monto">
+                            <label for="txtMonto">Monto</label>
+                        </div>                      
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button id="btnGuardarInfraccion" type="button" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <!-- Modal para confirmar eliminación -->
+    <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Confirmar eliminación</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar este vehículo municipal?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteForm" action="/Infraccions/DeleteConfirmed" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="deleteInfraccionId" name="id" value="">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script>
+        //para el manejo del mensaje de conformidad
+        var successMessage = '@Html.Raw(successMessage ?? "")';
+        if (successMessage !== "") {
+            $(document).ready(function () {
+                $('#modalSuccess').modal('show');
+            });
+        }
+    </script>
+    <script src="~/js/Infraccion.js" asp-append-version="true"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MuniChorrillos2</title>
+    
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MuniChorrillos2.styles.css" asp-append-version="true" />
+    
+</head>
+<body>
+    <header>
+        <section class="header__info">
+            <p>Si nececitas ayuda comunicate con InkaCode Perú al <span class="phone_number">946980952</span></p>
+        </section>
+
+        <section class="container-navbar">
+            <nav class="navbar container">
+                <a href="#" class="navbar__logo">
+                    <img src="Images/logoMuni.png" alt="logo municipal" />
+                    <span></span>
+                </a>
+                <div class="navbar__nav"> 
+                     <ul class="nav__list">
+                        <li class="nav__link">
+                            <a asp-controller="Home" asp-action="Index">Inicio</a>
+                        </li>
+
+                        <li class="nav__link submenu">
+                            <a>Muncipalidad</a>
+                            <ul class="hijos">                            
+                                <li><a asp-controller="Horarios" asp-action="Index">Horarios</a></li>
+                                <li><a asp-controller="Vmunicipals" asp-action="Index">Gruas</a></li>
+                                <li><a asp-controller="Depositos" asp-action="Index">Depositos</a></li>
+                                <li><a asp-controller="Empleados" asp-action="Index">Empleados</a></li>
+                                
+                                
+                            </ul>
+                        </li>
+
+                        <li class="nav__link submenu">
+                            <a>Fiscalización</a>
+                            <ul class="hijos">
+                                <li><a asp-controller="Fiscalizacion" asp-action="Index">Generar Multa</a></li>
+                                <li><a asp-controller="Multas" asp-action="Index">Multas</a></li>
+                                <li><a asp-controller="UsuariosClientes" asp-action="Index">Infractores</a></li>
+                            </ul>
+                        </li>
+                       
+                        <li class="nav__link submenu">
+                            <a>Cajas</a>
+                            <ul class="hijos">
+                                <li><a asp-controller="SistemaPagos" asp-action="Index">Pago de Multas</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav__link submenu">
+                            <a>Sistema</a>
+                            <ul class="hijos">
+                                <li><a asp-controller="Infraccions" asp-action="Index">Infracciones</a></li>
+                                <li><a asp-controller="TipoDoc" asp-action="Index">Documentos</a></li>
+                                <li><a asp-controller="Personals" asp-action="Index">Personal ADM</a></li>
+                                <li><a asp-controller="Areas" asp-action="Index">Areas</a></li>
+                            </ul>
+                        </li>
+                       
+                                            
+                       
+                        
+                        <li class="nav__link">
+                            <a asp-controller="Home" asp-action="Logout">Salir</a>
+                        </li>
+                        
+
+                    </ul>    
+
+                     <button class="navbar__toogle-btn">
+                         <img src="images/3puntos.png" alt="desplegable" />
+                     </button>
+                     <div class="navbar__mobile-menu">
+                        <ul class="nav__list-mobile">
+                            <li class="nav__link-mobile">
+                               
+                                <a href="Personals/index">empleados</a>
+                            </li>
+                          
+                        </ul>
+                     </div>
+                </div>
+            </nav>
+        </section>
+
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - Municipalidad De Chorrillos - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

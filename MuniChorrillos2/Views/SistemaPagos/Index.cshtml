@@ -1,0 +1,246 @@
+﻿@model IEnumerable<MuniChorrillos2.Models.Multum>
+
+@{
+    ViewData["Title"] = "Sistema de Pagos";
+    var successMessage = TempData["SuccessMessage"] as string;
+    var paymentStatus = TempData["PaymentStatus"] as string; // Esto indica "Success" o "Cancel"
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/SistemadePagos.css" asp-append-version="true" />
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <div class="container">
+        @if (paymentStatus == "Success")
+        {
+            <div class="alert alert-success mt-5">
+                <h4 class="alert-heading">Pago realizado con éxito</h4>
+                <p>Gracias por su pago. Su transacción ha sido procesada correctamente.</p>
+                <hr>
+                <p class="mb-0">Si tiene alguna pregunta, por favor, contacte con nosotros.</p>
+                <a href="@Url.Action("Index", "SistemaPagos")" class="btn btn-primary mt-3">Volver al Sistema de Pagos</a>
+            </div>
+        }
+        else if (paymentStatus == "Cancel")
+        {
+            <div class="alert alert-warning mt-5">
+                <h4 class="alert-heading">Pago Cancelado</h4>
+                <p>El pago ha sido cancelado. Si desea intentarlo de nuevo, puede regresar al sistema de pagos.</p>
+                <hr>
+                <p class="mb-0">Si tiene alguna pregunta, por favor, contacte con nosotros.</p>
+                <a href="@Url.Action("Index", "SistemaPagos")" class="btn btn-primary mt-3">Volver al Sistema de Pagos</a>
+            </div>
+        }
+        else
+        {
+            <div class="card mt-4">
+                <div class="card-header">
+                    Pago de Multas
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(successMessage))
+                    {
+                        <div class="alert alert-success">
+                            @successMessage
+                        </div>
+                    }
+                    <div class="table-responsive">
+                        <table class="table table-striped mx-auto" id="tblMultum">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Placa</th>
+                                    <th scope="col">Nro. Serie Multa</th>
+                                    <th scope="col">Propietario</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Telefono</th>
+                                    <th scope="col">Estado de Pago</th>
+                                    <th scope="col">Código de Pago</th>
+                                    <th scope="col">ImagenBase64</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.Placa)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.NroSerie)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Propietario)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Telefono)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.EstPago)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.CodPago)</td>
+                                        <td>
+                                            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#imageModal"
+                                                    data-imagen="@item.ImagenBase64">
+                                                Ver Multa
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <!-- Botón "Pagar" en lugar de "Actualizar" -->
+                                        
+                                                @if (item.EstPago == "P")
+                                                {
+                                                <button type="button" class="btn btn-secondary" disabled>
+                                                    Pagado
+                                                </button>
+                                                }
+                                                else
+                                                {
+                                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#paymentModal"
+                                                        data-id="@item.IdMulta" data-montomulta="@item.MontoMulta">
+                                                    Pagar
+                                                </button>
+                                                }
+                                        
+                                            <!-- Botón "NTC" en lugar de "Eliminar" -->
+                                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalNTC"
+                                                    data-id="@item.IdMulta">
+                                                NTC
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Modal para Métodos de Pago -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paymentModalLabel">Seleccione Método de Pago</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="btn-group-vertical w-100" role="group">
+                        <button type="button" class="btn btn-secondary" onclick="processPayment('Efectivo')">Efectivo</button>
+                        <button type="button" class="btn btn-secondary" onclick="processPayment('Tarjeta')">Tarjeta Crédito o Débito</button>
+                        <button type="button" class="btn btn-secondary" onclick="processPayment('QR')">Pagar con QR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Confirmar el Monto a Pagar en Efectivo -->
+    <div class="modal fade" id="cashPaymentModal" tabindex="-1" aria-labelledby="cashPaymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cashPaymentModalLabel">Pago en Efectivo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="cashPaymentForm">
+                        <div class="mb-3">
+                            <label for="amountPaid" class="form-label">Cantidad de Dinero:</label>
+                            <input type="number" class="form-control" id="amountPaid" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Monto a Pagar:</label>
+                            <input type="text" class="form-control" id="MontoMulta" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Vuelto:</label>
+                            <input type="text" class="form-control" id="changeGiven" readonly>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Procesar Pago</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- Modal para mostrar la imagen -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Imagen de la Multa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalImage" src="" alt="Imagen de la Multa" class="img-fluid" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script src="~/js/SistemadePago.js" asp-append-version="true"></script>
+
+    <script>
+        function processPayment(method) {
+            console.log("Procesando pago con: " + method);
+            switch (method) {
+                case 'Efectivo':
+                    $('#paymentModal').modal('hide'); // Ocultar el primer modal
+                    $('#cashPaymentModal').modal('show'); // Mostrar el modal de efectivo
+                    break;
+                case 'Tarjeta':
+                    // Lógica para pago con tarjeta
+                    break;
+                case 'QR':
+                    // Lógica para pago con QR
+                    break;
+            }
+        }
+
+    </script>
+
+    <script>
+        document.getElementById('cashPaymentForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var amountPaid = parseFloat(document.getElementById('amountPaid').value);
+            var amountDue = parseFloat(document.getElementById('amountDue').value);
+            var changeGiven = amountPaid - amountDue;
+
+            if (changeGiven < 0) {
+                alert("La cantidad pagada es insuficiente.");
+                return;
+            }
+
+            document.getElementById('changeGiven').value = changeGiven.toFixed(2);
+
+            // Aquí puedes añadir la lógica para registrar el pago en el servidor, etc.
+            alert("Pago procesado con éxito. Su vuelto es " + changeGiven.toFixed(2) + " soles.");
+
+            // Redirigir a la página de todas las multas
+            window.location.href = '@Url.Action("Index", "Multas")'; // Asegúrate de cambiar "Multas" al nombre correcto del controlador y la acción
+        });
+
+        $('#cashPaymentModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Botón que activó el modal
+            var montoMulta = button.data('montomulta'); // Extrae el dato del atributo data-montomulta
+            console.log(montoMulta); // Depura el valor que estás recibiendo
+            var modal = $(this);
+            modal.find('#amountDue').val(montoMulta); // Coloca el monto en el campo correspondiente
+        });
+
+        document.getElementById('amountPaid').addEventListener('input', function () {
+            var amountPaid = parseFloat(this.value) || 0;
+            var amountDue = parseFloat(document.getElementById('amountDue').value) || 0;
+            var change = amountPaid - amountDue;
+            document.getElementById('changeGiven').value = (change > 0 ? change.toFixed(2) : 0).toString();
+        });
+
+    </script>
+
+</body>
+</html>

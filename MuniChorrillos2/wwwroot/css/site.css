@@ -1,0 +1,65 @@
+.nav__link a {
+    color: darkblue;
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.nav__link a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    background-color: darkblue;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}    
+
+.nav__link:hover a::after {
+    opacity: 1;
+}
+
+/* Submenu */
+
+
+.nav__link .hijos {
+    display: none; /* none para ocultar el menu */
+    position: absolute;
+    background-color: #f9f9f9;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 100;
+}
+
+    .nav__link .hijos a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+
+
+/* Estilo fondo para el submenu */
+.nav__link.submenu:hover a {
+    background-color: #f1f1f1;
+}
+
+/* Esto oculta el submenu  */
+.submenu .hijos {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.25); /* shadow box */
+}
+
+/* Muestra el submenu cuando el puntero del mause esta sobre areas */
+.submenu:hover .hijos {
+    display: block;
+}
+
+/* Elimina que submenu se muestre como una lista */
+.navbar__nav ul {
+    list-style: none;
+}

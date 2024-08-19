@@ -1,0 +1,12 @@
+﻿.card-header h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #000000; /* Negro */
+    margin-bottom: 0;
+}
+
+
+.btn-custom {
+    font-size: 1rem; /* Tamaño de fuente mediano */
+    padding: 0.5rem 1rem; /* Tamaño del botón */
+}

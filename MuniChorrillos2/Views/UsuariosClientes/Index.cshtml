@@ -1,0 +1,165 @@
+﻿@model IEnumerable<MuniChorrillos2.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Mantenimiento de Usuarios";
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <div class="container">
+        <div class="card mt-4">
+            <div class="card-header">
+                Mantenimiento de Usuarios
+            </div>
+            <div class="card-body">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalUsuario">Agregar</button>
+                <hr />
+                <div class="table-responsive">
+                    <table class="table table-striped mx-auto" id="tblUsuario">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Apellido</th>
+                                <th scope="col">Dirección</th>
+                                <th scope="col">Teléfono</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Contraseña</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.NombreU)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.ApellidoU)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Direccion)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Telefono)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                    <td>
+                                        <!-- Mostrar la contraseña como asteriscos -->
+                                        @if (!string.IsNullOrEmpty(item.Contraseña))
+                                        {
+                                            @Html.Raw(new string('*', item.Contraseña.Length))
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw(new string('*', 8)) <!-- Puedes ajustar el número de asteriscos por defecto -->
+                                        }
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalUsuario"
+                                                data-id="@item.IdUsuario" data-nombre="@item.NombreU" data-apellido="@item.ApellidoU"
+                                                data-direccion="@item.Direccion" data-telefono="@item.Telefono" data-email="@item.Email">
+                                            Actualizar
+                                        </button>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete"
+                                                data-id="@item.IdUsuario">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar/actualizar Usuario -->
+    <div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Usuario</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="usuarioForm" action="/UsuariosClientes/CreateOrUpdate" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="hddIdUsuario" name="IdUsuario" value="0">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtNombreU" name="NombreU" placeholder="Nombre">
+                            <label for="txtNombreU">Nombre</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtApellidoU" name="ApellidoU" placeholder="Apellido">
+                            <label for="txtApellidoU">Apellido</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtDireccion" name="Direccion" placeholder="Dirección">
+                            <label for="txtDireccion">Dirección</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtTelefono" name="Telefono" placeholder="Teléfono">
+                            <label for="txtTelefono">Teléfono</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="txtEmail" name="Email" placeholder="Email">
+                            <label for="txtEmail">Email</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="txtContraseña" name="Contraseña" placeholder="Contraseña">
+                            <label for="txtContraseña">Contraseña</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button id="btnGuardarUsuario" type="button" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para confirmar eliminación -->
+    <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Confirmar eliminación</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar este usuario?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteForm" action="/UsuariosClientes/DeleteConfirmed" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="deleteUsuarioId" name="id" value="">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script>
+        //para el manejo del mensaje de conformidad
+        var successMessage = '@Html.Raw(successMessage ?? "")';
+        if (successMessage !== "") {
+            $(document).ready(function () {
+                $('#modalSuccess').modal('show');
+            });
+        }
+        // Manejar el mensaje de éxito
+        var successMessage = '@Html.Raw(successMessage ?? "")';
+        if (successMessage !== "") {
+            alert(successMessage);
+        }
+    </script> 
+    <script src="~/js/UsuariosClientes.js" asp-append-version="true"></script>
+</body>
+</html>

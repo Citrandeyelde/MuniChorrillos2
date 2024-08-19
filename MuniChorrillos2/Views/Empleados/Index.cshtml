@@ -1,0 +1,190 @@
+﻿@model IEnumerable<MuniChorrillos2.Models.Empleado>
+
+@{
+    ViewData["Title"] = "Gestión de Empleados";
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <div class="container">
+        <div class="card mt-4">
+            <div class="card-header">
+                Gestión de Empleados
+            </div>
+            <div class="card-body">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEmpleado">Agregar Empleado</button>
+                <hr />
+                <div class="table-responsive">
+                    <table class="table table-striped mx-auto" id="tblEmpleados">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Apellido Paterno</th>
+                                <th scope="col">Apellido Materno</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Teléfono</th>
+                                <th scope="col">Dirección</th>
+                                <th scope="col">Fecha de Ingreso</th>
+                                <th scope="col">Activo</th>
+                                <th scope="col">Estado Civil</th>
+                                <th scope="col">Nro de Identidad</th>
+                                <th scope="col">Tipo de Documento</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var empleado in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => empleado.NomEmpleado)</td>
+                                    <td>@Html.DisplayFor(modelItem => empleado.ApellidoP)</td>
+                                    <td>@Html.DisplayFor(modelItem => empleado.ApellidoM)</td>
+                                    <td>@Html.DisplayFor(modelItem => empleado.Email)</td>
+                                    <td>@Html.DisplayFor(modelItem => empleado.Telefono)</td>
+                                    <td>@Html.DisplayFor(modelItem => empleado.Direccion)</td>
+                                    <td>@Html.DisplayFor(modelItem => empleado.FechaIngreso)</td>
+                                    <td>
+                                        <input type="checkbox" class="activo-checkbox" data-id="@empleado.IdEmpleado" @(empleado.Activo == 1 ? "checked='checked'" : "") />
+                                    </td>
+                                    <td>@Html.DisplayFor(modelItem => empleado.EstadoCivil)</td>
+                                    <td>@Html.DisplayFor(modelItem => empleado.NroIdentidad)</td>
+                                    <td>@Html.DisplayFor(modelItem => empleado.IdTipoDocNavigation.Descripcion)</td>
+                                    <td>
+                                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalEmpleado"
+                                                data-id="@empleado.IdEmpleado" data-nombre="@empleado.NomEmpleado"
+                                                data-apellidop="@empleado.ApellidoP" data-apellidom="@empleado.ApellidoM"
+                                                data-email="@empleado.Email" data-telefono="@empleado.Telefono"
+                                                data-direccion="@empleado.Direccion" data-fechaingreso="@empleado.FechaIngreso"
+                                                data-activo="@empleado.Activo" data-estadocivil="@empleado.EstadoCivil"
+                                                data-nroidentidad="@empleado.NroIdentidad" data-tipodoc="@empleado.IdTipoDoc">
+                                            Actualizar
+                                        </button>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete"
+                                                data-id="@empleado.IdEmpleado">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar/actualizar Vehículo Municipal -->
+    <div class="modal fade" id="modalEmpleado" tabindex="-1" aria-labelledby="modalEmpleadoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalEmpleadoLabel">Datos del Empleado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="empleadoForm" action="/Empleados/CreateOrUpdate" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="hddIdEmpleado" name="IdEmpleado" value="0">
+                        <div class="mb-3">
+                            <label for="txtNomEmpleado" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="txtNomEmpleado" name="NomEmpleado" placeholder="Nombre del empleado">
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtApellidoP" class="form-label">Apellido Paterno</label>
+                            <input type="text" class="form-control" id="txtApellidoP" name="ApellidoP" placeholder="Apellido Paterno">
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtApellidoM" class="form-label">Apellido Materno</label>
+                            <input type="text" class="form-control" id="txtApellidoM" name="ApellidoM" placeholder="Apellido Materno">
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="txtEmail" name="Email" placeholder="Correo Electrónico">
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtTelefono" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="txtTelefono" name="Telefono" placeholder="Número de Teléfono">
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtDireccion" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="txtDireccion" name="Direccion" placeholder="Dirección">
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtFechaIngreso" class="form-label">Fecha de Ingreso</label>
+                            <input type="date" class="form-control" id="txtFechaIngreso" name="FechaIngreso">
+                        </div>
+
+                        
+
+                        <div class="mb-3">
+                            <label for="txtEstadoCivil" class="form-label">Estado Civil</label>
+                            <input type="text" class="form-control" id="txtEstadoCivil" name="EstadoCivil" placeholder="Estado Civil">
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtNroIdentidad" class="form-label">Número de Identidad</label>
+                            <input type="number" class="form-control" id="txtNroIdentidad" name="NroIdentidad" placeholder="Número de Identidad">
+                        </div>
+                        <div class="mb-3">
+                            <label for="ddlTipoDoc" class="form-label">Tipo de Documento</label>
+                            <select class="form-control" id="ddlTipoDoc" name="IdTipoDoc">
+                                <option value="">Seleccione un Tipo de Documento</option>
+                                @foreach (var tipoDoc in (SelectList)ViewData["IdTipoDoc"])
+                                {
+                                    <option value="@tipoDoc.Value">@tipoDoc.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button id="btnGuardarEmpleado" type="button" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmar eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar este empleado?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteForm" action="/Empleados/DeleteConfirmed" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="deleteEmpleadoId" name="id" value="">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script>
+        //para el manejo del mensaje de conformidad
+        var successMessage = '@Html.Raw(successMessage ?? "")';
+        if (successMessage !== "") {
+            $(document).ready(function () {
+                $('#modalSuccess').modal('show');
+            });
+        }
+    </script>
+    <script src="~/js/Empleados.js" asp-append-version="true"></script>
+</body>
+</html>

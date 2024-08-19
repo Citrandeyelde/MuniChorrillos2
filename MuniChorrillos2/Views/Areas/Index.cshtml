@@ -1,0 +1,136 @@
+﻿@model IEnumerable<MuniChorrillos2.Models.Area>
+
+@{
+    ViewData["Title"] = "Mantenimiento de Áreas";
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Areas.css" asp-append-version="true" />
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card mt-4">
+            <div class="card-header">
+                Mantenimiento de Áreas
+            </div>
+            <div class="card-body">
+                <button type="button" class="btn btn-primary" id="btnagregar" data-bs-toggle="modal" data-bs-target="#modalarea">Agregar</button>
+                <hr />
+                <div class="table-responsive">
+                <table class="table table-striped mx-auto" id="tblarea">                 
+                    <thead>
+                        <tr>
+                            <th scope="col">@Html.DisplayNameFor(model => model.First().NomArea)</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.NomArea)</td>
+                                <td>
+                                    <button type="button" class="btn btn-info btnactualizar" data-bs-toggle="modal" data-bs-target="#modalarea"
+                                            data-areaid="@item.IdArea" data-areaname="@item.NomArea">
+                                        Actualizar
+                                    </button>
+                                    <button type="button" class="btn btn-danger btndelete" data-bs-toggle="modal" data-bs-target="#modaldelete"
+                                            data-areaid="@item.IdArea" data-areaname="@item.NomArea">
+                                        Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar/actualizar área -->
+    <div class="modal fade" id="modalarea" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Área</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="areaForm" action="/Areas/CreateOrUpdate" method="post">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtnomarea" name="NomArea" placeholder="Nombre del Área">
+                            <label for="txtnomarea">Nombre del Área</label>
+                        </div>
+                        <input type="hidden" id="hddcodarea" name="IdArea" value="0">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button id="btnguardar" type="button" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para confirmar eliminación -->
+    <div class="modal fade" id="modaldelete" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Confirmar eliminación</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar el área "<span id="deleteAreaName"></span>"?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteForm" action="/Areas/Delete" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="deleteAreaId" name="id" value="">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para mensaje de éxito -->
+    <div class="modal fade" id="modalSuccess" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="successModalLabel">Éxito</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @successMessage
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script>
+        //para el manejo del mensaje de conformidad
+        var successMessage = '@Html.Raw(successMessage ?? "")';
+        if (successMessage !== "") {
+            $(document).ready(function () {
+                $('#modalSuccess').modal('show');
+            });
+        }
+    </script>
+    <script src="~/js/Areas.js" asp-append-version="true"></script>
+</body>
+</html>

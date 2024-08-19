@@ -1,0 +1,106 @@
+﻿body {
+    
+    position: relative;
+    padding-bottom: 2.5em;
+    min-height: 100vh;
+}
+
+.container {
+    padding: 20px;
+}
+
+.shadow-box {
+    background-color: rgb(223, 223, 223);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.header-section, .section {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.section-title {
+    color: darkblue;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.form-control, .form-select {
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
+
+.btn {
+    background-color: #555;
+    color: #fff;
+    border: 1px solid white;
+}
+
+    .btn:hover {
+        background-color: #666;
+        color: #fff;
+    }
+
+.header-section .logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.header-section .info {
+    text-align: right;
+}
+
+
+/* Estilos específicos para impresión */
+@media print {
+    body {
+        background-color: white;
+        color: black;
+        margin: 0;
+        padding: 0;
+    }
+
+    .shadow-box {
+        box-shadow: none;
+        border: none;
+    }
+
+    .container {
+        padding: 0;
+        margin: 0;
+    }
+
+    .header-section, .section {
+        background-color: white;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 0;
+    }
+
+    .section-title {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+
+    .form-control, .form-select {
+        font-size: 12px;
+        border: 1px solid #ccc;
+    }
+
+    .btn {
+        display: none; /* Oculta los botones al imprimir */
+    }
+
+    .header-section .logo {
+        font-size: 20px;
+    }
+
+    .header-section .info {
+        font-size: 12px;
+    }
+}

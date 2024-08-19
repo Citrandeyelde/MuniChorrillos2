@@ -1,0 +1,160 @@
+﻿@model IEnumerable<MuniChorrillos2.Models.Personal>
+
+@{
+    ViewData["Title"] = "Mantenimiento de Personal Administrativo";
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <div class="container">
+        <div class="card mt-4">
+            <div class="card-header">
+                Mantenimiento de Personal Administrativo
+            </div>
+            <div class="card-body">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPersonal">Agregar</button>
+                <hr />
+                <div class="table-responsive">
+                    <table class="table table-striped mx-auto" id="tblPersonal">
+                        <thead>
+                            <tr>
+                                <th scope="col">Empleado</th>
+                                <th scope="col">Área</th>
+                                <th scope="col">Usuario</th>
+                                <th scope="col">Contraseña</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.IdEmpleadoNavigation.NomEmpleado)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.IdAreaNavigation.NomArea)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.UsuarioAcceso)</td>
+                                    <td>
+                                        <!-- Mostrar la contraseña como asteriscos -->
+                                        @if (!string.IsNullOrEmpty(item.Contraseña))
+                                        {
+                                            @Html.Raw(new string('*', item.Contraseña.Length))
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw(new string('*', 8)) <!-- Puedes ajustar el número de asteriscos por defecto -->
+                                        }
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalPersonal"
+                                                data-id="@item.IdPersonal" data-empleado="@item.IdEmpleado" data-area="@item.IdArea"
+                                                data-usuario="@item.UsuarioAcceso" data-contraseña="@item.Contraseña">
+                                            Actualizar
+                                        </button>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete"
+                                                data-id="@item.IdPersonal">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar/actualizar Personal -->
+    <div class="modal fade" id="modalPersonal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Personal Administrativo</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="personalForm" action="/Personals/CreateOrUpdate" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="IdPersonal" name="IdPersonal" value="0">
+                        <div class="form-floating mb-3">
+                            <select class="form-control" id="ddlEmpleado" name="IdEmpleado">
+                                <option value="">Seleccione Empleado</option>
+                                @foreach (var empleado in (SelectList)ViewData["IdEmpleado"])
+                                {
+                                    <option value="@empleado.Value">@empleado.Text</option>
+                                }
+                            </select>
+                            <label for="ddlEmpleado" class="control-label">Empleado</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-control" id="ddlArea" name="IdArea">
+                                <option value="">Seleccione Área</option>
+                                @foreach (var area in (SelectList)ViewData["IdArea"])
+                                {
+                                    <option value="@area.Value">@area.Text</option>
+                                }
+                            </select>
+                            <label for="ddlArea" class="control-label">Área</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtUsuarioAcceso" name="UsuarioAcceso" placeholder="Usuario ADM">
+                            <label for="txtUsuarioAcceso">Usuario ADM</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="txtContraseña" name="Contraseña" placeholder="Contraseña">
+                            <label for="txtContraseña">Contraseña</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button id="btnGuardarPersonal" type="button" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para confirmar eliminación -->
+    <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Confirmar eliminación</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar este Usuario?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteForm" action="/Personals/DeleteConfirmed" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="deletePersonalId" name="id" value="">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script>
+        //para el manejo del mensaje de conformidad
+        var successMessage = '@Html.Raw(successMessage ?? "")';
+        if (successMessage !== "") {
+            $(document).ready(function () {
+                $('#modalSuccess').modal('show');
+            });
+        }
+    </script>
+    <script src="~/js/Personal.js" asp-append-version="true"></script>
+</body>
+</html>

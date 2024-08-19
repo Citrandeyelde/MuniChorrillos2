@@ -1,0 +1,169 @@
+﻿@model IEnumerable<MuniChorrillos2.Models.Vmunicipal>
+
+@{
+    ViewData["Title"] = "Mantenimiento de Vehículos Municipales";
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <div class="container">
+        <div class="card mt-4">
+            <div class="card-header">
+                Mantenimiento de Vehículos Municipales
+            </div>
+            <div class="card-body">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalVmunicipal">Agregar</button>
+                <hr />
+                <div class="table-responsive">
+                    <table class="table table-striped mx-auto" id="tblVmunicipal">
+                        <thead>
+                            <tr>
+                                <th scope="col">Placa</th>
+                                <th scope="col">Marca</th>
+                                <th scope="col">Modelo</th>
+                                <th scope="col">Número de Motor</th>
+                                <th scope="col">Año</th>
+                                <th scope="col">Color</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Personal Asignado</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.Placa)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Marca)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Modelo)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Nmotor)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Año)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Color)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Estado)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.IdPersonalNavigation.UsuarioAcceso)</td>
+                                    <td>
+                                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalVmunicipal"
+                                                data-id="@item.IdVehiculoMunicipal" data-placa="@item.Placa" data-marca="@item.Marca"
+                                                data-modelo="@item.Modelo" data-nmotor="@item.Nmotor" data-ano="@item.Año"
+                                                data-color="@item.Color" data-estado="@item.Estado" data-personal="@item.IdPersonal">
+                                            Actualizar
+                                        </button>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete"
+                                                data-id="@item.IdVehiculoMunicipal">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar/actualizar Vehículo Municipal -->
+    <div class="modal fade" id="modalVmunicipal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Vehículo Municipal</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="vMunicipalForm" action="/Vmunicipals/CreateOrUpdate" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="hddIdVehiculoMunicipal" name="IdVehiculoMunicipal" value="0">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtPlaca" name="Placa" placeholder="Placa">
+                            <label for="txtPlaca">Placa</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtMarca" name="Marca" placeholder="Marca">
+                            <label for="txtMarca">Marca</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtModelo" name="Modelo" placeholder="Modelo">
+                            <label for="txtModelo">Modelo</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtNmotor" name="Nmotor" placeholder="Número de Motor">
+                            <label for="txtNmotor">Número de Motor</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="txtAno" name="Año" placeholder="Año">
+                            <label for="txtAño">Año</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtColor" name="Color" placeholder="Color">
+                            <label for="txtColor">Color</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtEstado" name="Estado" placeholder="Estado">
+                            <label for="txtEstado">Estado</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-control" id="ddlPersonal" name="IdPersonal">
+                                <option value="">Seleccione Personal</option>
+                                @foreach (var personal in (SelectList)ViewData["IdPersonal"])
+                                {
+                                    <option value="@personal.Value">@personal.Text</option>
+                                }
+                            </select>
+                            <label for="ddlPersonal" class="control-label">Personal</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button id="btnGuardarVmunicipal" type="button" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para confirmar eliminación -->
+    <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Confirmar eliminación</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar este vehículo municipal?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteForm" action="/Vmunicipals/DeleteConfirmed" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="deleteVehiculoMunicipalId" name="id" value="">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script>
+        //para el manejo del mensaje de conformidad
+        var successMessage = '@Html.Raw(successMessage ?? "")';
+        if (successMessage !== "") {
+            $(document).ready(function () {
+                $('#modalSuccess').modal('show');
+            });
+        }
+    </script>
+    <script src="~/js/Vmunicipal.js" asp-append-version="true"></script>
+</body>
+</html>

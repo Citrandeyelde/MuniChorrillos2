@@ -1,0 +1,308 @@
+﻿@model IEnumerable<MuniChorrillos2.Models.Multum>
+
+@{
+    ViewData["Title"] = "Mantenimiento de Multas";
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <div class="container">
+        <div class="card mt-4">
+            <div class="card-header">
+                Mantenimiento de Multas
+            </div>
+            <div class="card-body">
+                @if (!string.IsNullOrEmpty(successMessage))
+                {
+                    <div class="alert alert-success">
+                        @successMessage
+                    </div>
+                }
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalMultum">Agregar</button>
+                <hr />
+                <div class="table-responsive">
+                    <table class="table table-striped mx-auto" id="tblMultum">
+                        <thead>
+                            <tr>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Hora</th>
+                                <th scope="col">Lugar</th>
+                                <th scope="col">Distrito</th>
+                                <th scope="col">Número de Serie</th>
+                                <th scope="col">Placa</th>
+                                <th scope="col">Marca</th>
+                                <th scope="col">Modelo</th>
+                                <th scope="col">Número de Motor</th>
+                                <th scope="col">Año</th>
+                                <th scope="col">Color</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Propietario</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Dirección</th>
+                                <th scope="col">Grua</th>
+                                <th scope="col">Depósito</th>
+                                <th scope="col">Infracción</th>
+                                <th scope="col">Personal</th>
+                                <th scope="col">Estado de Pago</th>
+                                <th scope="col">Código de Pago</th>
+                                <th scope="col">Telefono</th>
+                                <th scope="col">Observaciones</th>
+                                <th scope="col">ImagenBase64</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.FecMulta)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.HoraMulta)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.LugarMulta)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.DistritoMulta)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.NroSerie)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Placa)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Marca)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Modelo)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Nmotor)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Año)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Color)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Estado)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Propietario)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Direcion)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Grua)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.IdDepositoNavigation.NomDeposito)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.IdInfraccionNavigation.Descripcion)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.IdPersonalNavigation.UsuarioAcceso)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.EstPago)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.CodPago)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Telefono)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Observaciones)</td>
+                                    <td>
+                                        <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#imageModal"
+                                                data-imagen="@item.ImagenBase64">
+                                                Ver Multa
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalMultum"
+                                                data-id="@item.IdMulta" data-fecha="@item.FecMulta" data-hora="@item.HoraMulta"
+                                                data-lugar="@item.LugarMulta" data-distrito="@item.DistritoMulta" data-nroserie="@item.NroSerie"
+                                                data-placa="@item.Placa" data-marca="@item.Marca" data-modelo="@item.Modelo"
+                                                data-nmotor="@item.Nmotor" data-ano="@item.Año" data-color="@item.Color"
+                                                data-estado="@item.Estado" data-propietario="@item.Propietario" data-email="@item.Email"
+                                                data-direcion="@item.Direcion" data-grua="@item.Grua" data-iddeposito="@item.IdDeposito"
+                                                data-idinfraccion="@item.IdInfraccion" data-idpersonal="@item.IdPersonal"
+                                                data-estpago="@item.EstPago" data-codpago="@item.CodPago" data-telefono="@item.Telefono"
+                                                data-observaciones="@item.Observaciones" data-imagen="@item.ImagenBase64">
+                                            Actualizar
+                                        </button>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete"
+                                                data-id="@item.IdMulta">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar/actualizar Multa -->
+    <div class="modal fade" id="modalMultum" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Multa</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="multumForm" action="/Multas/CreateOrUpdate" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="hddIdMulta" name="IdMulta" value="0">
+                        <div class="form-floating mb-3">
+                            <input type="date" class="form-control" id="txtFecha" name="FecMulta" placeholder="Fecha de la Multa">
+                            <label for="txtFecha">Fecha de la Multa</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="time" class="form-control" id="txtHora" name="HoraMulta" placeholder="Hora de la Multa">
+                            <label for="txtHora">Hora de la Multa</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtLugar" name="LugarMulta" placeholder="Lugar de la Multa">
+                            <label for="txtLugar">Lugar de la Multa</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtDistrito" name="DistritoMulta" placeholder="Distrito de la Multa">
+                            <label for="txtDistrito">Distrito de la Multa</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtNroSerie" name="NroSerie" placeholder="Número de Serie">
+                            <label for="txtNroSerie">Número de Serie</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtPlaca" name="Placa" placeholder="Placa">
+                            <label for="txtPlaca">Placa</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtMarca" name="Marca" placeholder="Marca">
+                            <label for="txtMarca">Marca</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtModelo" name="Modelo" placeholder="Modelo">
+                            <label for="txtModelo">Modelo</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtNmotor" name="Nmotor" placeholder="Número de Motor">
+                            <label for="txtNmotor">Número de Motor</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="txtAno" name="Año" placeholder="Año">
+                            <label for="txtAno">Año</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtColor" name="Color" placeholder="Color">
+                            <label for="txtColor">Color</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtEstado" name="Estado" placeholder="Estado">
+                            <label for="txtEstado">Estado</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtPropietario" name="Propietario" placeholder="Propietario">
+                            <label for="txtPropietario">Propietario</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="txtEmail" name="Email" placeholder="Email">
+                            <label for="txtEmail">Email</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtDirecion" name="Direcion" placeholder="Dirección">
+                            <label for="txtDirecion">Dirección</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtGrua" name="Grua" placeholder="Grua">
+                            <label for="txtGrua">Grua</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-control" id="ddlDeposito" name="IdDeposito">
+                                <option value="">Seleccione Depósito</option>
+                                @foreach (var deposito in (SelectList)ViewData["IdDeposito"])
+                                {
+                                    <option value="@deposito.Value">@deposito.Text</option>
+                                }
+                            </select>
+                            <label for="ddlDeposito" class="control-label">Depósito</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-control" id="ddlInfraccion" name="IdInfraccion">
+                                <option value="">Seleccione Infracción</option>
+                                @foreach (var infraccion in (SelectList)ViewData["IdInfraccion"])
+                                {
+                                    <option value="@infraccion.Value">@infraccion.Text</option>
+                                }
+                            </select>
+                            <label for="ddlInfraccion" class="control-label">Infracción</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-control" id="ddlPersonal" name="IdPersonal">
+                                <option value="">Seleccione Personal</option>
+                                @foreach (var personal in (SelectList)ViewData["IdPersonal"])
+                                {
+                                    <option value="@personal.Value">@personal.Text</option>
+                                }
+                            </select>
+                            <label for="ddlPersonal" class="control-label">Personal</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtEstPago" name="EstPago" placeholder="Estado de Pago">
+                            <label for="txtEstPago">Estado de Pago</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtCodPago" name="CodPago" placeholder="Código de Pago">
+                            <label for="txtCodPago">Código de Pago</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtTelefono" name="Telefono" placeholder="Telefono">
+                            <label for="txtTelefono">Telefono</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtObservaciones" name="Observaciones" placeholder="Observaciones">
+                            <label for="txtObservaciones">Observaciones</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button id="btnGuardarMultum" type="button" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para confirmar eliminación -->
+    <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Confirmar eliminación</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar esta multa?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteForm" action="/Multas/DeleteConfirmed" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="deleteMultumId" name="id" value="">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para mostrar la imagen -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Imagen de la Multa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalImage" src="" alt="Imagen de la Multa" class="img-fluid" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script>
+        //para el manejo del mensaje de conformidad
+        var successMessage = '@Html.Raw(successMessage ?? "")';
+        if (successMessage !== "") {
+            $(document).ready(function () {
+                alert(successMessage);
+                $('#modalSuccess').modal('show');
+            });
+        }
+    </script>
+    <script src="~/js/Multas.js" asp-append-version="true"></script>
+</body>
+</html>

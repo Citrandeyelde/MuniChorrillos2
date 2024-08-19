@@ -1,0 +1,84 @@
+﻿@model MuniChorrillos2.Models.Horario
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Horario</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Lunes)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Lunes)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Martes)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Martes)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Miercoles)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Miercoles)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Jueves)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Jueves)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Viernes)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Viernes)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Sabado)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Sabado)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Domingo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Domingo)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Hingreso)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Hingreso)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Hsalida)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Hsalida)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdAreaNavigation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IdAreaNavigation.IdArea)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.IdEmpleadoNavigation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.IdEmpleadoNavigation.IdEmpleado)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.IdHorario">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

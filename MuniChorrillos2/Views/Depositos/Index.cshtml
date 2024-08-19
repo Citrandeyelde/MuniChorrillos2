@@ -1,0 +1,146 @@
+﻿@model IEnumerable<MuniChorrillos2.Models.Deposito>
+
+@{
+    ViewData["Title"] = "Mantenimiento de Depositos";
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <div class="container">
+        <div class="card mt-4">
+            <div class="card-header">
+                Mantenimiento de Depositos
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-3">
+                    <div class="input-group input-group-md" style="max-width: 300px;">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Buscar...">
+                    </div>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDeposito">Agregar</button>
+                </div>
+                <hr />
+                <div class="table-responsive">
+                    <table class="table table-striped mx-auto" id="tblDeposito">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Deposito</th>
+                                <th scope="col">Direccion</th>
+                                <th scope="col">Encargado</th>
+
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td>@Html.DisplayFor(modelItem => item.NomDeposito)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Direccion)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.IdPersonalNavigation.UsuarioAcceso)</td>
+                                    <td>
+                                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalDeposito"
+                                                data-id="@item.IdDeposito" data-nombre="@item.NomDeposito"
+                                                data-direccion="@item.Direccion" data-personal="@item.IdPersonal">
+                                            Actualizar
+                                        </button>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDelete"
+                                                data-id="@item.IdDeposito">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal para agregar/actualizar Personal -->
+    <div class="modal fade" id="modalDeposito" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Depositos</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="depositoForm" action="/Depositos/CreateOrUpdate" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="IdDeposito" name="IdDeposito" value="0">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtNomDeposito" name="NomDeposito" placeholder="Deposito">
+                            <label for="txtNomDeposito">Deposito</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="txtDireccion" name="Direccion" placeholder="Direccion">
+                            <label for="txtDireccion">Direccion</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-control" id="ddlPersonal" name="IdPersonal">
+                                <option value="">Seleccione Personal</option>
+                                @foreach (var personal in (SelectList)ViewData["IdPersonal"])
+                                {
+                                    <option value="@personal.Value">@personal.Text</option>
+                                }
+                            </select>
+                            <label for="ddlPersonal" class="control-label">Perosonal ADM</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button id="btnGuardarDeposito" type="button" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para confirmar eliminación -->
+    <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Confirmar eliminación</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar este Deposito?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteForm" action="/Depositos/DeleteConfirmed" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" id="deleteDepositosId" name="id" value="">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script>
+        //para el manejo del mensaje de conformidad
+        var successMessage = '@Html.Raw(successMessage ?? "")';
+        if (successMessage !== "") {
+            $(document).ready(function () {
+                $('#modalSuccess').modal('show');
+            });
+        }
+    </script>
+    <script src="~/js/Deposito.js" asp-append-version="true"></script>
+
+</body>
+</html>
