@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MuniChorrillos2.Models;
+using MuniChorrillos2.Servicios;
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -16,7 +17,8 @@ namespace MuniChorrillos2.Controllers
     public class FiscalizacionController : Controller
     {
         private readonly Bdmultas2Context _context;
-        
+        private readonly IEmailServices _emailServices;
+
 
         private string GenerateCodPago()
         {
@@ -24,10 +26,10 @@ namespace MuniChorrillos2.Controllers
         }
 
 
-        public FiscalizacionController(Bdmultas2Context context)
+        public FiscalizacionController(Bdmultas2Context context , IEmailServices emailServices)
         {
             _context = context;
-             
+            _emailServices = emailServices; 
         }
 
         private string GenerateNroSerie()
@@ -47,6 +49,8 @@ namespace MuniChorrillos2.Controllers
                 HoraMulta = DateTime.Now.TimeOfDay,
                 CodPago = GenerateCodPago()
             };
+
+
 
             ViewData["IdDeposito"] = new SelectList(await _context.Depositos.ToListAsync(), "IdDeposito", "NomDeposito");
             ViewData["IdPersonal"] = new SelectList(await _context.Personals.ToListAsync(), "IdPersonal", "UsuarioAcceso");
@@ -85,6 +89,12 @@ namespace MuniChorrillos2.Controllers
         {
             if (ModelState.IsValid)
             {
+                var oEmailDto = new EmailDTO();
+
+                oEmailDto.Para = multum.Email.ToString();
+                oEmailDto.Asunto = "Paga tu multa INFRACTORRRR";
+                oEmailDto.Contenido = "Has tenido una multa acercate a pagar";
+                _emailServices.SendEmail(oEmailDto);
                 // Establecer el estado de pago a "no pagado"
                 multum.EstPago = "N P";
 

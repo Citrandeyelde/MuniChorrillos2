@@ -2,15 +2,19 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MuniChorrillos2.Models;
+using MuniChorrillos2.Servicios;
+using Stripe.Identity;
 
 namespace MuniChorrillos2.Controllers
 {
     public class MultasController : Controller
     {
+        private readonly IEmailServices _emailServices;
         private readonly Bdmultas2Context _context;
 
-        public MultasController(Bdmultas2Context context)
-        {
+        public MultasController(Bdmultas2Context context, IEmailServices emailServices)
+        {   
+            _emailServices = emailServices;
             _context = context;
         }
 
@@ -35,10 +39,17 @@ namespace MuniChorrillos2.Controllers
         {
             if (ModelState.IsValid)
             {
+                var oEmailDto = new EmailDTO();
+
+                oEmailDto.Para = multa.ToString();
+                oEmailDto.Asunto = multa.IdInfraccionNavigation.NomInfraccion.ToString();
+                oEmailDto.Contenido = "Has tenido una multa acercate a pagar";
+                _emailServices.SendEmail(oEmailDto);
+
                 if (multa.IdMulta == 0)
                 {
-                    _context.Add(multa);
                     
+                    _context.Add(multa);
                 }
                 else
                 {

@@ -14,6 +14,8 @@ builder.Services.AddSession(options =>
 });
 
 // Add services to the container.
+
+builder.Services.AddScoped<IEmailServices, EmailServices>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<Bdmultas2Context>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConnAdrian")));
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
